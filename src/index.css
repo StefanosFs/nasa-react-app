@@ -1,0 +1,263 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color: white;
+  background-color: #030615;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  position: relative;;
+}
+
+.imgContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.bgImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  z-index: 5;
+}
+
+footer div {
+  display: flex;
+  flex-direction: column;
+  max-width: 70%;
+}
+
+footer h2 {
+  font-size: clamp(0.9rem, 4vw, 1.4rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+footer h1 {
+  font-size: clamp(0.7rem, 3vw, 0.9rem);
+  font-weight: 200;
+}
+
+footer button {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 1rem;
+  transition-duration: 200ms;
+  cursor: pointer;
+}
+
+footer button i {
+  font-size: 1.3rem;
+}
+
+footer button:hover {
+  opacity: 0.7;
+}
+
+.bgGradient {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to top, #030615, rgba(255, 255, 255, 0));
+}
+
+.sidebar {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.bgOverlay {
+  position: absolute;
+  inset: 0;
+  background: #030615;
+  opacity: 0.6;
+}
+
+.sidebarContents {
+  z-index: 15;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  max-width: 800px;
+  margin-left: auto;
+  background: #030615;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.sidebarContents h2 {
+  font-weight: 400;
+  font-size: clamp(1.2rem, 5vw, 1.4rem);
+  line-height: 1.3;
+}
+
+.sidebarContents div {
+  flex: 1;
+}
+
+.sidebarContents button {
+  background: transparent;
+  color: white;
+  border: none;
+  outline: none;
+  margin-right: auto;
+  cursor: pointer;
+  transition-duration: 200ms;
+  padding: 1rem 0;
+}
+
+.sidebarContents button:hover {
+  opacity: 0.7;
+}
+
+.descriptionContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: clamp(0.9rem, 4vw, 1rem);
+  line-height: 1.5;
+}
+
+.descriptionTitle {
+  font-size: clamp(0.9rem, 4vw, 1.1rem);
+  font-weight: 200;
+  opacity: 0.8;
+}
+
+.loadingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background: #030615;
+}
+
+.loadingState i {
+  opacity: 0.3;
+  font-size: clamp(2rem, 8vw, 3rem);
+  animation: spin 1.5s linear infinite;
+  color: #fff;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 640px) {
+  .sidebar {
+    position: fixed;
+    inset: 0;
+    width: 40%;
+    max-width: 600px;
+    margin-left: auto;
+  }
+
+  .sidebarContents {
+    padding: 2rem;
+  }
+
+  footer {
+    padding: 1.5rem;
+  }
+
+  .bgOverlay {
+    right: 0;
+    left: unset;
+    width: 100vw;
+  }
+}
+
+@media (max-width: 639px) {
+  .sidebarContents {
+    padding: 1rem;
+  }
+
+  .sidebarContents button {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    background: rgba(3, 6, 21, 0.8);
+    padding: 0.75rem;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  footer button {
+    padding: 0.75rem;
+  }
+}
+
+/* Add smooth scrolling for the entire app */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Improve touch targets on mobile */
+button {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
