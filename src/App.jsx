@@ -17,8 +17,19 @@ function App() {
 
   useEffect(() => {
     async function fetchAPIData() {
-      const NASA_KEY = import.meta.env.VITE_NASA_API_KEY
-      const url = 'https://api.nasa.gov/planetary/apod' + `?api_key=${NASA_KEY}`
+      const NASA_API = import.meta.env.VITE_NASA_API
+      console.log('Environment check:', {
+        hasApiKey: !!NASA_API,
+        envKeys: Object.keys(import.meta.env),
+        isProd: import.meta.env.PROD
+      })
+
+      if (!NASA_API) {
+        throw new Error('NASA API configuration is missing. Please check your environment variables.')
+      }
+
+      const url = 'https://api.nasa.gov/planetary/apod' + `?api_key=${NASA_API}`
+      console.log('Attempting to fetch from:', url)
 
       const today = (new Date()).toDateString()
       const localKey = `NASA-${today}`
@@ -36,9 +47,12 @@ function App() {
 
         localStorage.clear()
         const res = await fetch(url)
+        console.log('Fetch response status:', res.status)
         
         if (!res.ok) {
-          throw new Error('Failed to fetch data from NASA API')
+          const errorText = await res.text()
+          console.error('API Error Response:', errorText)
+          throw new Error(`Failed to fetch data from NASA API: ${res.status} ${res.statusText}`)
         }
 
         const apiData = await res.json()
