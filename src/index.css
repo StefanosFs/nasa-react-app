@@ -10,27 +10,34 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #root {
   min-height: 100vh;
+  min-height: -webkit-fill-available;
   display: flex;
-  position: relative;;
+  position: relative;
 }
 
 .imgContainer {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  height: -webkit-fill-available;
   width: 100%;
   position: relative;
   overflow: hidden;
+  touch-action: pan-x pan-y;
 }
 
 .bgImage {
@@ -38,6 +45,8 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 footer {
@@ -49,14 +58,17 @@ footer {
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem;
+  padding: calc(0.75rem + var(--safe-area-inset-bottom)) 0.75rem 0.75rem;
   z-index: 5;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 footer div {
   display: flex;
   flex-direction: column;
   max-width: 70%;
+  gap: 0.25rem;
 }
 
 footer h2 {
@@ -64,11 +76,13 @@ footer h2 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 footer h1 {
   font-size: clamp(0.7rem, 3vw, 0.9rem);
   font-weight: 200;
+  opacity: 0.9;
 }
 
 footer button {
@@ -102,7 +116,8 @@ footer button:hover {
   display: flex;
   flex-direction: column;
   z-index: 10;
-  animation: slideIn 0.3s ease-out;
+  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  touch-action: none;
 }
 
 @keyframes slideIn {
@@ -127,8 +142,9 @@ footer button:hover {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 1.5rem;
+  padding: calc(1rem + var(--safe-area-inset-top)) 1rem calc(1rem + var(--safe-area-inset-bottom));
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   height: 100%;
   width: 100%;
   max-width: 800px;
@@ -141,6 +157,7 @@ footer button:hover {
   font-weight: 400;
   font-size: clamp(1.2rem, 5vw, 1.4rem);
   line-height: 1.3;
+  padding-right: 2rem;
 }
 
 .sidebarContents div {
@@ -167,7 +184,14 @@ footer button:hover {
   flex-direction: column;
   gap: 0.75rem;
   font-size: clamp(0.9rem, 4vw, 1rem);
-  line-height: 1.5;
+  line-height: 1.6;
+  padding-bottom: 4rem;
+}
+
+.descriptionContainer p {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
 }
 
 .descriptionTitle {
@@ -178,11 +202,15 @@ footer button:hover {
 
 .loadingState {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
+  height: -webkit-fill-available;
   width: 100vw;
   background: #030615;
+  padding: 1rem;
+  text-align: center;
 }
 
 .loadingState i {
@@ -190,6 +218,7 @@ footer button:hover {
   font-size: clamp(2rem, 8vw, 3rem);
   animation: spin 1.5s linear infinite;
   color: #fff;
+  margin-bottom: 1rem;
 }
 
 @keyframes spin {
@@ -227,36 +256,91 @@ footer button:hover {
 
 @media (max-width: 639px) {
   .sidebarContents {
-    padding: 1rem;
+    padding: calc(1rem + var(--safe-area-inset-top)) 1rem calc(4rem + var(--safe-area-inset-bottom));
   }
 
   .sidebarContents button {
     position: fixed;
-    bottom: 1rem;
+    bottom: calc(1rem + var(--safe-area-inset-bottom));
     right: 1rem;
-    background: rgba(3, 6, 21, 0.8);
+    background: rgba(3, 6, 21, 0.9);
     padding: 0.75rem;
     border-radius: 50%;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 20;
+  }
+
+  footer {
+    padding: calc(0.75rem + var(--safe-area-inset-bottom)) 0.75rem 0.75rem;
   }
 
   footer button {
     padding: 0.75rem;
+    background: rgba(3, 6, 21, 0.9);
+    border-radius: 50%;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .loadingState {
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .loadingState p {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  .loadingState button {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 }
 
-/* Add smooth scrolling for the entire app */
+/* Add smooth scrolling and better touch handling */
 html {
   scroll-behavior: smooth;
+  height: -webkit-fill-available;
 }
 
-/* Improve touch targets on mobile */
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  overscroll-behavior: none;
+}
+
+/* Improve touch targets and interactions */
 button {
   min-height: 44px;
   min-width: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+/* Add pull-to-refresh visual feedback */
+@keyframes pullToRefresh {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(20px); }
+  100% { transform: translateY(0); }
+}
+
+.pullToRefresh {
+  animation: pullToRefresh 1s ease-in-out;
 }
 
 
