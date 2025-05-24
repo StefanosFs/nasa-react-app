@@ -53,6 +53,18 @@
   inset: 0;
 }
 
+/* Add mobile-specific padding */
+@media (max-width: 639px) {
+  .imgContainer {
+    padding: 0.5rem;
+    box-sizing: border-box;
+  }
+
+  .bgImage {
+    border-radius: 0.5rem;
+  }
+}
+
 footer {
   position: fixed;
   bottom: 0;
