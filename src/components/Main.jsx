@@ -3,9 +3,11 @@ import { useEffect, useState } from "react"
 const Main = (props) => {
   const { data } = props
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false)
+  const [isVideoBuffering, setIsVideoBuffering] = useState(false)
 
   useEffect(() => {
     setShouldLoadVideo(false)
+    setIsVideoBuffering(false)
   }, [data?.date, data?.url])
 
   const getEmbedUrl = (url) => {
@@ -60,30 +62,49 @@ const Main = (props) => {
         canRenderVideoInline ? (
           shouldLoadVideo ? (
             isDirectVideoFile ? (
-              <video
-                src={videoUrl}
-                className="bgImage"
-                controls
-                playsInline
-                preload="metadata"
-                autoPlay
-              >
-                Your browser does not support the video tag.
-              </video>
+              <>
+                <video
+                  src={videoUrl}
+                  className="bgImage"
+                  controls
+                  playsInline
+                  preload="metadata"
+                  autoPlay
+                  loop
+                  onWaiting={() => setIsVideoBuffering(true)}
+                  onCanPlay={() => setIsVideoBuffering(false)}
+                  onPlaying={() => setIsVideoBuffering(false)}
+                >
+                  Your browser does not support the video tag.
+                </video>
+                {isVideoBuffering && <div className="videoLoadingOverlay">Loading video...</div>}
+              </>
             ) : (
-              <iframe
-                src={embedUrl}
-                title={data?.title || "NASA video"}
-                className="bgImage"
-                frameBorder="0"
-                loading="lazy"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              />
+              <>
+                <iframe
+                  src={embedUrl}
+                  title={data?.title || "NASA video"}
+                  className="bgImage"
+                  frameBorder="0"
+                  loading="lazy"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  onLoad={() => setIsVideoBuffering(false)}
+                />
+                {isVideoBuffering && <div className="videoLoadingOverlay">Loading video...</div>}
+              </>
             )
           ) : (
-            <button className="videoPreview" onClick={() => setShouldLoadVideo(true)} type="button" aria-label="Play NASA video">
+            <button
+              className="videoPreview"
+              onClick={() => {
+                setShouldLoadVideo(true)
+                setIsVideoBuffering(true)
+              }}
+              type="button"
+              aria-label="Play NASA video"
+            >
               {videoThumbnail ? (
                 <img
                   src={videoThumbnail}
