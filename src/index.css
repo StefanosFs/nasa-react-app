@@ -53,6 +53,34 @@
   inset: 0;
 }
 
+.videoPreview {
+  position: absolute;
+  inset: 0;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.videoFallbackBg {
+  background: radial-gradient(circle at center, #18274f 0%, #030615 70%);
+}
+
+.videoPlayButton {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 9999px;
+  padding: 0.65rem 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
 /* Add mobile-specific padding */
 @media (max-width: 639px) {
   .imgContainer {

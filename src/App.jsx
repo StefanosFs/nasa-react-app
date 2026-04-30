@@ -17,22 +17,20 @@ function App() {
 
   useEffect(() => {
     async function fetchAPIData() {
-      const NASA_API = import.meta.env.VITE_NASA_API
+      // Use environment variable or fallback to DEMO_KEY for development
+      const NASA_API = import.meta.env.VITE_NASA_API || 'DEMO_KEY'
       console.log('Environment check:', {
         hasApiKey: !!NASA_API,
         envKeys: Object.keys(import.meta.env),
-        isProd: import.meta.env.PROD
+        isProd: import.meta.env.PROD,
+        apiKeyType: NASA_API === 'DEMO_KEY' ? 'Using DEMO_KEY' : 'Using custom key'
       })
 
-      if (!NASA_API) {
-        throw new Error('NASA API configuration is missing. Please check your environment variables.')
-      }
-
-      const url = 'https://api.nasa.gov/planetary/apod' + `?api_key=${NASA_API}`
-      console.log('Attempting to fetch from:', url)
+      const url = 'https://api.nasa.gov/planetary/apod' + `?api_key=${NASA_API}&thumbs=true`
+      console.log('Attempting to fetch from:', url.replace(NASA_API, '***'))
 
       const today = (new Date()).toDateString()
-      const localKey = `NASA-${today}`
+      const localKey = `NASA-v2-${today}`
 
       try {
         setLoading(true)
@@ -52,6 +50,9 @@ function App() {
         if (!res.ok) {
           const errorText = await res.text()
           console.error('API Error Response:', errorText)
+          if (res.status === 403) {
+            throw new Error('Invalid or missing API key. Please check your environment variables.')
+          }
           throw new Error(`Failed to fetch data from NASA API: ${res.status} ${res.statusText}`)
         }
 
